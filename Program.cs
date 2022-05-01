@@ -59,20 +59,3 @@ if (!IsNull_ShouldNotBeNull_NewVar) {
     TestString(OutputStringNewVar);
 }
 #endregion
-#region These should throw exceptions and produce warnings
-// The below functions should give warnings as they will only run the values are null
-// Since these will throw exceptions, only one of them is run at a time.
-
-// Check if each of the test values are null based on the function return value.
-// Then call a function that requires a non-null string/integer, but only when the test values are null.
-// This should trigger warnings from the compiler, OmniSharp, Visual Studio, etc.
-
-// The below function call should always run because the value will never be null.
-if (IsNull_ShouldNotBeNull) {
-    TestString(NotNullTest);
-}
-// The below function call should never run as the value will always be null
-if (IsNull_ShouldBeNull) {
-    TestString(AlwaysNullTest);
-}
-#endregion
