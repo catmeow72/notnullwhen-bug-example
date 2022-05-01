@@ -2,17 +2,6 @@
 using static NoNullValues;
 using static ExampleFunctions;
 
-#region Code that obtains arguments for later use and make sure that using Args[1] doesn't crash
-string[] Args = Environment.GetCommandLineArgs();
-
-if (Args.Length == 1) {
-    Args = new string[] {Args[0], ""};
-}
-#endregion
-
-#region Basic NotNullWhen example functions with strings
-#endregion
-
 #region Tests with functions that return true when the output is null and return false when the output isn't null
 // The nullable strings to test with.
 string? NotNullTest;
@@ -95,14 +84,6 @@ if (ShouldBeNull_Struct) {
     TestInt(NotNullStructTest);
 }
 #endregion
-
-#region Test argument parsing to allow running all tests
-int TestToRun;
-if (!int.TryParse(Args[1], out TestToRun)) {
-    TestToRun = -1;
-}
-#endregion
-
 #region These should throw exceptions and produce warnings
 // The below functions should give warnings as they will only run the values are null
 // Since these will throw exceptions, only one of them is run at a time.
@@ -111,42 +92,28 @@ if (!int.TryParse(Args[1], out TestToRun)) {
 // Then call a function that requires a non-null string/integer, but only when the test values are null.
 // This should trigger warnings from the compiler, OmniSharp, Visual Studio, etc.
 
-switch (TestToRun) {
-    case 0:
-        // The below function call should always run because the value will never be null.
-        if (IsNull_ShouldNotBeNull) {
-            TestString(NotNullTest);
-        }
-        break;
-    case 1:
-        // The below function call should never run as the value will always be null
-        if (IsNull_ShouldBeNull) {
-            TestString(AlwaysNullTest);
-        }
-        break;
-    case 2:
-        // The below function call should never run because the value will never be null.
-        if (!IsNotNull_ShouldNotBeNull) {
-            TestString(NotNullTest2);
-        }
-        break;
-    case 3:
-        // The below function call should always run as the value will always be null
-        if (!IsNotNull_ShouldBeNull) {
-            TestString(AlwaysNullTest2);
-        }
-        break;
-    case 4:
-        // The below function call should never run because the value will never be null.
-        if (!ShouldNotBeNull_Struct) {
-            TestInt(NotNullStructTest);
-        }
-        break;
-    case 5:
-        // The below function call should always run as the value will always be null
-        if (!ShouldBeNull_Struct) {
-            TestInt(NotNullStructTest);
-        }
-        break;
+// The below function call should always run because the value will never be null.
+if (IsNull_ShouldNotBeNull) {
+    TestString(NotNullTest);
+}
+// The below function call should never run as the value will always be null
+if (IsNull_ShouldBeNull) {
+    TestString(AlwaysNullTest);
+}
+// The below function call should never run because the value will never be null.
+if (!IsNotNull_ShouldNotBeNull) {
+    TestString(NotNullTest2);
+}
+// The below function call should always run as the value will always be null
+if (!IsNotNull_ShouldBeNull) {
+    TestString(AlwaysNullTest2);
+}
+// The below function call should never run because the value will never be null.
+if (!ShouldNotBeNull_Struct) {
+    TestInt(NotNullStructTest);
+}
+// The below function call should always run as the value will always be null
+if (!ShouldBeNull_Struct) {
+    TestInt(NotNullStructTest);
 }
 #endregion
