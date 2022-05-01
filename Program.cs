@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using static NoNullValues;
-using static ExampleFunctions;
 
 #region Functions
 /// <Summary>
