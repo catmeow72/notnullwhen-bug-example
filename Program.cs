@@ -1,66 +1,35 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using static NoNullValues;
-using static ExampleFunctions;
 
-#region Tests with functions that return true when the output is null and return false when the output isn't null
-// The nullable strings to test with.
-string? NotNullTest;
-string? AlwaysNullTest;
-string? PossiblyNullTest;
-
-// Test the function call.
-bool IsNull_ShouldNotBeNull = Example_NullWhenTrue(2, out NotNullTest);
-bool IsNull_ShouldBeNull = Example_NullWhenTrue(1, out AlwaysNullTest);
-bool IsNull_ShouldNotBeNull_NewVar = Example_NullWhenTrue(2, out var OutputStringNewVar);
-
-// Check if each of the test values are null based on the function return value.
-// Then call a function that requires a non-null string, but only when the test values aren't null.
-
-// The below function call should always run because the value will never be null.
-if (!IsNull_ShouldNotBeNull) {
-    TestString(NotNullTest);
+#region Functions
+/// <Summary>
+/// Either returns true and sets the output to -1, or returns false and sets the output to null.
+/// Note the NotNullWhen attribute. This should tell the compiler that the value is not null when the function returns <c>false</c>
+/// </Summary>
+/// <Param name="ExampleInt">If even, the output will not be null. Otherwise, it will be.</Param>
+/// <Param name="OutputString">The string to set.</Param>
+/// <Returns><c>true</c> if the value is null, <c>false</c> otherwise.</Returns>
+bool Example_Struct(int ExampleInt, [NotNullWhen(true)] out int? OutputInt) {
+    if (ExampleInt % 2 == 0) {
+        OutputInt = -1;
+        return true;
+    } else {
+        OutputInt = null;
+        return false;
+    }
 }
-
-// The below function call should never run as the value will always be null
-if (!IsNull_ShouldBeNull) {
-    TestString(AlwaysNullTest);
-}
-
-if (!IsNull_ShouldNotBeNull_NewVar) {
-    TestString(OutputStringNewVar);
-}
-#endregion
-
-#region Tests with functions that return true when the output isn't null and return false when the output is null
-
-// The nullable strings to test with.
-string? NotNullTest2;
-string? AlwaysNullTest2;
-string? PossiblyNullTest2;
-
-// Test the function call.
-bool IsNotNull_ShouldNotBeNull = Example_NullWhenFalse(2, out NotNullTest2);
-bool IsNotNull_ShouldBeNull = Example_NullWhenFalse(1, out AlwaysNullTest2);
-bool IsNotNull_ShouldNotBeNull_NewVar = Example_NullWhenTrue(2, out var OutputStringNewVar2);
-
-// Check if each of the test values are null based on the function return value.
-// Then call a function that requires a non-null string, but only when the test values aren't null.
-
-// The below function call should always run because the value will never be null.
-if (IsNotNull_ShouldNotBeNull) {
-    TestString(NotNullTest2);
-}
-
-// The below function call should never run as the value will always be null
-if (IsNotNull_ShouldBeNull) {
-    TestString(AlwaysNullTest2);
-}
-// Also occurs with new variables
-if (IsNotNull_ShouldNotBeNull_NewVar) {
-    TestString(OutputStringNewVar2);
+/// <Summary>
+/// A function to test the int (struct) values with
+/// This function is used with the Int32 class
+/// </Summary>
+/// <Param name="input">A non-null integer to display</Param>
+/// <Exception cref="System.ArgumentNullException">Thrown when the integer is null. Used for the examples that should throw exceptions when running the project.</Exception>
+void TestInt([DisallowNull]int? input) {
+    if (!input.HasValue) {
+        throw new ArgumentNullException(nameof(input));
+    }
+    Console.Out.WriteLine("The integer is: {0}", input.Value);
 }
 #endregion
-
 #region Struct tests
 
 // The nullable strings to test with.
@@ -92,22 +61,6 @@ if (ShouldBeNull_Struct) {
 // Then call a function that requires a non-null string/integer, but only when the test values are null.
 // This should trigger warnings from the compiler, OmniSharp, Visual Studio, etc.
 
-// The below function call should always run because the value will never be null.
-if (IsNull_ShouldNotBeNull) {
-    TestString(NotNullTest);
-}
-// The below function call should never run as the value will always be null
-if (IsNull_ShouldBeNull) {
-    TestString(AlwaysNullTest);
-}
-// The below function call should never run because the value will never be null.
-if (!IsNotNull_ShouldNotBeNull) {
-    TestString(NotNullTest2);
-}
-// The below function call should always run as the value will always be null
-if (!IsNotNull_ShouldBeNull) {
-    TestString(AlwaysNullTest2);
-}
 // The below function call should never run because the value will never be null.
 if (!ShouldNotBeNull_Struct) {
     TestInt(NotNullStructTest);
